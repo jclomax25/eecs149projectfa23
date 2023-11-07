@@ -2,12 +2,19 @@
 
 import sensor, fir
 import machine
+from micropyGPS import MicropyGPS
 
 import sdcard
 import uos
 
 # Assign chip select (CS) pin (and start it high)
 cs = machine.Pin(9, machine.Pin.OUT)
+
+# Create GPS UART connection
+gps_mod = machine.UART(2, baudrate=9600)
+
+# Create i2c bus
+i2c = machine.I2C(1, freq=400_000)
 
 # Intialize SPI peripheral (start with 1 MHz)
 spi = machine.SPI(1,
