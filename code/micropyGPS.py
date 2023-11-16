@@ -151,11 +151,15 @@ class MicropyGPS(object):
         """
         Closes the log file handler and disables further logging
         """
-        try:
-            self.log_handle.close()
-        except AttributeError:
-            print("Invalid Handle")
+        if(self.log_handle != None):
+            try:
+                self.log_handle.close()
+            except AttributeError:
+                print("Invalid Handle")
+                return False
+        else:
             return False
+        
 
         self.log_en = False
         return True
@@ -163,10 +167,14 @@ class MicropyGPS(object):
     def write_log(self, log_string):
         """Attempts to write the last valid NMEA sentence character to the active file handler
         """
-        try:
-            self.log_handle.write(log_string)
-        except TypeError:
+        if (self.log_handle != None):
+            try:
+                self.log_handle.write(log_string)
+            except TypeError:
+                return False
+        else:
             return False
+        
         return True
 
     ########################################
