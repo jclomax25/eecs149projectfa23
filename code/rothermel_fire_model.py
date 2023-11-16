@@ -16,7 +16,7 @@ def get_simple_fire_spread(fuelload, fueldepth, windspeed, slope, fuelmoisture, 
         @param windspeed
         @param slope
         @param fuelmoisture
-        @param fuelsav
+        @param fuelsav (SA to volume)
         @return Rate of spread (ft/min)
                 Reaction Intensity (Btu/ft/min)
                 Fireline Intensity (Btu/ft)
