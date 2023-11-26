@@ -6,7 +6,7 @@ __author__ = 'Roberto Sánchez'
 __license__ = "Apache License 2.0. https://www.apache.org/licenses/LICENSE-2.0"
 
 # I2C address B 0x45 ADDR (pin 2) connected to VDD
-DEFAULT_I2C_ADDRESS = 0x45
+DEFAULT_I2C_ADDRESS = 0x44
 
 class SHT30():
     """SHT30 Python Driver"""
@@ -28,13 +28,13 @@ class SHT30():
     ENABLE_HEATER_CMD = b'\x30\x6D'
     DISABLE_HEATER_CMD = b'\x30\x66'
 
-    def __init__(self, scl_pin=5, sda_pin=4, delta_temp=0, delta_hum=0, i2c_address=DEFAULT_I2C_ADDRESS):
-        self.i2c = I2C(scl=Pin(scl_pin), sda=Pin(sda_pin))
+    def __init__(self, scl_pin=13, sda_pin=12, delta_temp=0, delta_hum=0, i2c_address=0x44):
+        self.i2c = I2C(id=0, scl=Pin(scl_pin), sda=Pin(sda_pin), freq=100_000)
         self.i2c_addr = i2c_address
         self.set_delta(delta_temp, delta_hum)
         time.sleep_ms(50)
-    
-    def init(self, scl_pin=5, sda_pin=4):
+
+    def init(self, scl_pin=13, sda_pin=12):
         self.i2c.init(scl=Pin(scl_pin), sda=Pin(sda_pin))
 
     def is_present(self):
@@ -45,28 +45,30 @@ class SHT30():
         self.delta_hum = delta_hum
 
     def chk_crc(self, data):
-        crc_init = 0xFF
+        crc = 0xFF
 
         for d in data[:-1]:
-            crc = crc^d
+            crc ^= d
             for x in range(8, 0, -1):
                 if crc & 0x80:
                     crc = (crc << 1) ^ SHT30.POLYNOMIAL
                 else:
-                    crc = crc<<1
+                    crc <<= 1
         crc_to_comp = data[-1]
         return crc_to_comp == crc
 
     def send_cmd(self, cmd_request, response_size=6, read_delay_ms=100):
         try:
-            self.i2c.start()
+            #print("trying")
+            #print("started")
             self.i2c.writeto(self.i2c_addr, cmd_request)
+            #print("wrote")
             if not response_size:
-                self.i2c.stop()
                 return
             time.sleep_ms(read_delay_ms)
             data = self.i2c.readfrom(self.i2c_addr, response_size)
-            self.i2c.stop()
+            #print("read")
+            #print("stopped")
             for i in range(response_size//3):
                 if not self.chk_crc(data[i*3:(i+1)*3]):
                     raise SHT30Error(SHT30Error.CRC_ERROR)
@@ -77,20 +79,20 @@ class SHT30():
             if 'I2C' in ex.args[0]:
                 raise SHT30Error(SHT30Error.BUS_ERROR)
             raise ex
-        
+
     def clear_status(self):
         return self.send_cmd(SHT30.CLEAR_STATUS_CMD, None)
-    
+
     def reset(self):
         return self.send_cmd(SHT30.RESET_CMD, None)
-    
+
     def measure(self, raw=False):
         data = self.send_cmd(SHT30.MEASURE_CMD, 6)
 
         if raw:
             return data
-        
-        t_celsius = (((data[0] << 8 | data[1]) * 175) 0xFFFF) - 45 + self.delta_temp
+
+        t_celsius = (((data[0] << 8 | data[1]) * 175) / 0xFFFF) - 45 + self.delta_temp
         rh = (((data[3] << 8 | data[4]) * 100.0) / 0xFFFF) + self.delta_hum
         return t_celsius, rh
 
@@ -99,7 +101,7 @@ class SHT30():
 
         if raw:
             return data
-        
+
         aux = (data[0] << 8 | data[1]) * 175
         t_int = (aux // 0xffff) - 45
         t_dec = (aux % 0xffff * 100) // 0xffff
@@ -112,14 +114,14 @@ class SHT30Error(Exception):
     """
     Custom exception for errors on sensor management
     """
-    BUS_ERROR = 0x01 
+    BUS_ERROR = 0x01
     DATA_ERROR = 0x02
     CRC_ERROR = 0x03
 
     def __init__(self, error_code=None):
         self.error_code = error_code
         super().__init__(self.get_message())
-    
+
     def get_message(self):
         if self.error_code == SHT30Error.BUS_ERROR:
             return "Bus error"

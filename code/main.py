@@ -1,9 +1,12 @@
-from machine import Pin, Timer
+import time
+from machine import Pin
 
-led = Pin("LED", Pin.OUT)
-tim = Timer()
-def tick(timer):
-    global led
-    led.toggle()
+# This is the only LED pin available on the Nano RP2040,
+# other than the RGB LED connected to Nina Wi-Fi module.
+led = Pin(6, Pin.OUT)
 
-tim.init(freq=2, mode=Timer.PERIODIC, callback=tick)
+while (True):
+    led.on()
+    time.sleep_ms(250)
+    led.off()
+    time.sleep_ms(250)
