@@ -2,7 +2,7 @@
 
 #import sensor, fir
 import machine
-from micropyGPS import MicropyGPS
+#from micropyGPS import MicropyGPS
 from SHT30 import SHT30
 from gps import gpsModule
 import time
@@ -19,7 +19,7 @@ def tick(timer):
 tim.init(freq=2, mode=machine.Timer.PERIODIC, callback=tick)
 
 # Assign chip select (CS) pin (and start it high)
-cs = machine.Pin(9, machine.Pin.OUT)
+cs = machine.Pin(5, machine.Pin.OUT)
 
 # Create GPS UART connection
 gps_mod = gpsModule(0, baud_rate=9600)
@@ -49,45 +49,61 @@ if not 6:
 time.sleep_ms(50)
 data = temp.readfrom(0x44, 6)
 print("read")"""
-"""
+
 # Intialize SPI peripheral (start with 1 MHz)
-spi = machine.SPI(1,
+spi = machine.SPI(0,
                   baudrate=1000000,
                   polarity=0,
                   phase=0,
                   bits=8,
                   firstbit=machine.SPI.MSB,
-                  sck=machine.Pin(10),
-                  mosi=machine.Pin(11),
-                  miso=machine.Pin(8))
+                  sck=machine.Pin(6),
+                  mosi=machine.Pin(7),
+                  miso=machine.Pin(4))
 
 # Initialize SD card
 sd = sdcard.SDCard(spi, cs)
+print("successfully initialized")
 
 # Mount filesystem
 vfs = uos.VfsFat(sd)
 uos.mount(vfs, "/sd")
+print("successfully mounted")
 
 # Create a file and write something to it
 with open("/sd/test01.txt", "w") as file:
     file.write("Hello, SD World!\r\n")
     file.write("This is a test\r\n")
+    print("successfully wrote")
 
 # Open the file we just created and read from it
 with open("/sd/test01.txt", "r") as file:
     data = file.read()
     print(data)
-"""
+
 
 while(True):
-    print(gps_mod.gps_read())
+    x = gps_mod.gps_read()
+    print(x)
     print(gps_mod.get_valid_data())
     print(gps_mod.get_latitude())
     print(gps_mod.get_longitude())
     print(gps_mod.get_satellite_count())
     if(temp.is_present()):
         print(temp.measure())
-    time.sleep_ms(1000)
+    # Create a file and write something to it
+    with open("/sd/test01.txt", "w") as file:
+        file.write(x + "\n")
+        if(temp.is_present()):
+            file.write(str(temp.measure()))
+        print("successfully wrote")
+
+    # Open the file we just created and read from it
+    with open("/sd/test01.txt", "r") as file:
+        data = file.read()
+        print(data)
+        print("successfully read")
+    time.sleep_ms(2000)
 
 """
 # Setup Thermal Camera.

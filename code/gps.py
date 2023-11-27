@@ -1,7 +1,7 @@
 # FRAT gps.py - By: John Cole Lomax - Tue Nov 7 2023
 
 from machine import Pin, UART
-from micropyGPS import MicropyGPS
+#from micropyGPS import MicropyGPS
 import utime, time
 
 class gpsModule():
@@ -16,21 +16,21 @@ class gpsModule():
         self.altitude = 0.0
         self.valid = False
         self.data = bytearray(255)
-        self.parser = MicropyGPS()
+        #self.parser = MicropyGPS()
 
     def gps_read(self):
         timeout = time.time() + 8
         #self.uart.readline()
         self.data = str(self.uart.readline())
-        for x in self.data:
-            self.parser.update(x)
+        #for x in self.data:
+            #self.parser.update(x)
 
-        self.latitude = self.parser.latitude
-        self.longitude = self.parser.longitude
-        self.valid = self.parser.valid
-        self.altitude = self.parser.altitude
-        self.satellites = self.parser.satellites_in_use
-        self.GPStime = self.parser.timestamp
+        #self.latitude = self.parser.latitude
+        #self.longitude = self.parser.longitude
+        #self.valid = self.parser.valid
+        #self.altitude = self.parser.altitude
+        #self.satellites = self.parser.satellites_in_use
+        #self.GPStime = self.parser.timestamp
 
         if (time.time() > timeout):
             return False
