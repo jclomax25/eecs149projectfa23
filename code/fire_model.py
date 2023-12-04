@@ -1,5 +1,5 @@
 """
-Rothermel Fire Spread Model
+Fire Spread Model + Fire Ratings
 
 Resources used
 https://www.fs.usda.gov/rm/pubs_series/rmrs/gtr/rmrs_gtr371.pdf
@@ -93,6 +93,13 @@ def get_simple_fire_spread(fuelload, fueldepth, windspeed, slope, fuelmoisture, 
     else:
         return (maxval, maxval, maxval)
     
+
+def classify_ros_value(ros: int):
+    """ classify the ros value based on NWCG values
+        compare to IFTDSS values
+    """
+
+    return
 
 def test01_get_simple_fire_spread():
     """ test for get_simple_fire_spread
