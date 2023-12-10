@@ -6,10 +6,10 @@ convert lat/lon to make request on tif area
 """
 
 # import tifffile
-from osgeo import gdal, osr
-from pprint import pprint
-from pyproj import Proj, transform
+import math
 import rasterio as rio
+from osgeo import gdal, osr
+from pyproj import Proj, transform
 from constants import *
 
 def read_tif(path: str, 
@@ -30,6 +30,12 @@ def read_tif(path: str,
     x_start, y_start = image_latlon_pxpy(lat_start, lon_start, path, crs)
     x_stop, y_stop = image_latlon_pxpy(lat_stop, lon_stop, path, crs)
 
+    # due to crs issues, enhance pixel sampling zone
+    if x_start == x_stop:
+        x_stop += 1
+    if y_start == y_stop:
+        y_stop += 1
+
     raster_subset = ds.ReadAsArray(x_start,
                                    y_start, 
                                    x_stop - x_start, 
@@ -49,20 +55,60 @@ def image_latlon_pxpy(latitude, longitude, path, crs_form):
     print(px,py)
     px_pc = (px - dataset.bounds.left) / (dataset.bounds.right - dataset.bounds.left)
     py_pc = (dataset.bounds.top - py) / (dataset.bounds.top - dataset.bounds.bottom)
+    
     # return (px_pc*dataset.width, py_pc*dataset.height)
+    # print(px_pc*dataset.width)
+    # print(py_pc*dataset.height)
+
     return (int(px_pc*dataset.width), int(py_pc*dataset.height))
 
-def pixel_to_geo(x, y, geotransform):
-    """Apply geotransform to get proper lat/lon mapping onto array."""
-    lon = geotransform[0] + x * geotransform[1] + y * geotransform[2]
-    lat = geotransform[3] + x * geotransform[4] + y * geotransform[5]
-    return lon, lat
 
-def geo_to_pixel(lon, lat, geotransform):
-    """Apply inverse geotransform to get pixel coordinates from lat/lon."""
-    det = geotransform[1] * geotransform[5] - geotransform[2] * geotransform[4]
+def create_bounding_box(lat, lon):
+    """ with a single lat lon, return an approx 30m x 30m bbox
+        Length in km of 1° of latitude = always 111.32 km == 111320 m  / 30 ~= 3711 
+        1 deg / 3711 ~= 0.00026946914
+        Length in km of 1° of longitude = 40075 km * cos( latitude ) / 360
+    """
 
-    x = int((geotransform[1] * (lon - geotransform[0]) + geotransform[2] * (lat - geotransform[3])) / det)
-    y = int((geotransform[4] * (lon - geotransform[0]) + geotransform[5] * (lat - geotransform[3])) / det)
+    # approximate distance covered by 0.0003 degrees at the equator, ~30 m
+    delta =  0.00015 # 0.00026946914 # 0.00015
     
-    return x, y
+    delta_lat = delta
+    delta_lon = delta / abs(math.cos(math.radians(lat)))  # correct for dist variation
+
+    # expected parsing
+    # lon_start = master_bounds[0]
+    # lat_start = master_bounds[1]
+    # lon_stop = master_bounds[2]
+    # lat_stop = master_bounds[3]
+
+    upper_left_lat = lat + delta_lat
+    upper_left_lon = lon - delta_lon
+    lower_right_lat = lat - delta_lat
+    lower_right_lon = lon + delta_lon
+    
+    # return [upper_left_lon, upper_left_lat, lower_right_lon, lower_right_lat]
+    # return [upper_left_lat, upper_left_lon, lower_right_lat, lower_right_lon]
+    return [lower_right_lat, lower_right_lon, upper_left_lat, upper_left_lon]
+
+def read_csv_40fuel(csv_path: str):
+    """ read out csv 40 fuel model mapping
+    """
+    # TODO
+
+    return 0
+
+# def pixel_to_geo(x, y, geotransform):
+#     """Apply geotransform to get proper lat/lon mapping onto array."""
+#     lon = geotransform[0] + x * geotransform[1] + y * geotransform[2]
+#     lat = geotransform[3] + x * geotransform[4] + y * geotransform[5]
+#     return lon, lat
+
+# def geo_to_pixel(lon, lat, geotransform):
+#     """Apply inverse geotransform to get pixel coordinates from lat/lon."""
+#     det = geotransform[1] * geotransform[5] - geotransform[2] * geotransform[4]
+
+#     x = int((geotransform[1] * (lon - geotransform[0]) + geotransform[2] * (lat - geotransform[3])) / det)
+#     y = int((geotransform[4] * (lon - geotransform[0]) + geotransform[5] * (lat - geotransform[3])) / det)
+    
+#     return x, y

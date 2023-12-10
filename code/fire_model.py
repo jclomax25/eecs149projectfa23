@@ -94,12 +94,22 @@ def get_simple_fire_spread(fuelload, fueldepth, windspeed, slope, fuelmoisture, 
         return (maxval, maxval, maxval)
     
 
-def classify_ros_value(ros: int):
+def classify_ros_value(ros: float):
     """ classify the ros value based on NWCG values
         compare to IFTDSS values
+
+        need to convert ros value to chains/hr unit
     """
 
     return
+
+def ft_min_to_chain_hr(ros: float) -> float:
+    """ apply unit conversions for rothermel model
+    """
+
+    # (ft / min) * (min / hour ) * (chain / ft )
+
+    return 0
 
 def test01_get_simple_fire_spread():
     """ test for get_simple_fire_spread

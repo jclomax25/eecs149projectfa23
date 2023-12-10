@@ -10,10 +10,21 @@ call on functions to produce a final value
 from read_tif_file import *
 from constants import *
 
-lon_start = INPUT_BOUNDS[0]
-lat_start = INPUT_BOUNDS[1]
-lon_stop = INPUT_BOUNDS[2]
-lat_stop = INPUT_BOUNDS[3]
+
+POINT_USE = True
+
+if POINT_USE:
+    # gen single point 30m x 30m bounding box
+    master_point = CORY_TEST_POINT
+    master_bounds = create_bounding_box(master_point[0], master_point[1])
+else:
+    # switch on bound input for reading
+    master_bounds = BERKELEY_BOUNDS # TESTING_BOUNDS
+
+lon_start = master_bounds[0]
+lat_start = master_bounds[1]
+lon_stop = master_bounds[2]
+lat_stop = master_bounds[3]
 
 # test prototype transform 
 pixelx, pixely = image_latlon_pxpy(lat_start, lon_start, FORTY_FUEL_MODELS_TIF, CRS_FORM)
@@ -29,8 +40,14 @@ raster_read = read_tif(FORTY_FUEL_MODELS_TIF,
 
 print(raster_read)
 
-# call function with inputs
+# print unique vals for F40 extraction
+all_unique = []
+for sub_list in raster_read:
+    setit = set(sub_list)
+    setit = list(setit)
+    for item in setit:
+        if item not in all_unique:
+            all_unique.append(item)
 
-# classify the danger into categories 
-
-# finish
+print(all_unique)
+print("Done - Debug close")
