@@ -6,6 +6,7 @@ define constants global for entire FRAT project
 # path to files
 LANDFIRE_DIR = "/Users/katrinasharonin/Downloads/landfire_FW8smOZ84csjRPi1bY8w"
 FORTY_FUEL_MODELS_TIF = "/Users/katrinasharonin/Downloads/landfire_FW8smOZ84csjRPi1bY8w/LF2022_FBFM40_230_CONUS/LC22_F40_230.tif"
+FORTY_FUEL_MODELS_ATTRIBUTES = "/Users/katrinasharonin/Downloads/LF22_F40_230.csv"
 
 # bounding box defined as x - longitude, y - latitue
 # 37.881763 (lat), -122.246595 (long) (upper left)
@@ -17,4 +18,4 @@ INPUT_BOUNDS = [-122.246595, 37.881763, -122.222191, 37.864478]
 # raster value mappings
 
 # agreed CRS
-crs = "EPSG:4326"
+CRS_FORM = "epsg:5070"
