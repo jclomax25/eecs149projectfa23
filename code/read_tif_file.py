@@ -12,9 +12,7 @@ def read_tif(path: str,
             lon_start:int,
             lon_stop: int, 
             lat_start:int,
-            lat_stop: int, 
-            width:int, 
-            height:int):
+            lat_stop: int):
 
     ds = gdal.Open(path)
     geotransform = ds.GetGeoTransform()
@@ -32,6 +30,8 @@ def read_tif(path: str,
                                    y_stop - y_start)
     
     print(raster_subset)
+
+    return raster_subset
 
 def pixel_to_geo(x, y, geotransform):
     """ apply geotransform to get proper lat / lon mapping
