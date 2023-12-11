@@ -6,7 +6,9 @@ define constants global for entire FRAT project
 # path to files
 LANDFIRE_DIR = "/Users/katrinasharonin/Downloads/landfire_FW8smOZ84csjRPi1bY8w"
 FORTY_FUEL_MODELS_TIF = "/Users/katrinasharonin/Downloads/landfire_FW8smOZ84csjRPi1bY8w/LF2022_FBFM40_230_CONUS/LC22_F40_230.tif"
-FORTY_FUEL_MODELS_ATTRIBUTES = "/Users/katrinasharonin/Downloads/LF22_F40_230.csv"
+FORTY_FUEL_MODELS_ATTRIBUTES_CSV = "/Users/katrinasharonin/Downloads/LF22_F40_230.csv"
+# SLOPE_TIF = "/Users/katrinasharonin/Downloads/149landscape/slopereproj.tif"
+SLOPE_TIF = "/Users/katrinasharonin/Downloads/LF2020_SlpD_220_CONUS/LC20_SlpD_220.tif"
 
 # bounding box defined as x - longitude, y - latitue
 # 37.881763 (lat), -122.246595 (long) (upper left)
@@ -31,4 +33,5 @@ TESTING_POINT_TYPE_RESULTS = [91]
 # raster value mappingsv - one time dict generation/json
 
 # agreed CRS
-CRS_FORM = "epsg:5070"
+CRS_FORTY_FUEL = "epsg:5070"
+CRS_SLOPE = "epsg:4326"
