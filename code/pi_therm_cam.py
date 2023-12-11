@@ -11,6 +11,7 @@ import cv2
 import logging
 import cmapy
 from scipy import ndimage
+import math
 
 # Set up logging
 logging.basicConfig(filename='pithermcam.log',filemode='a',
@@ -18,6 +19,12 @@ logging.basicConfig(filename='pithermcam.log',filemode='a',
                     level=logging.WARNING,datefmt='%d-%b-%y %H:%M:%S')
 logger = logging.getLogger(__name__)
 
+IMAGE_CENTER_X = 400
+IMAGE_CENTER_Y = 300 
+THERM_CENTER_X = 16
+THERM_CENTER_Y = 12
+
+r_earth = 6378000
 
 class pithermalcam:
     # See https://gitlab.com/cvejarano-oss/cmapy/-/blob/master/docs/colorize_all_examples.md to for options that can be put in this list
@@ -90,7 +97,8 @@ class pithermalcam:
             self.mlx.getFrame(self._raw_image)  # read mlx90640
             self._temp_min = np.min(self._raw_image)
             self._temp_max = np.max(self._raw_image)
-            self._temp_image = np.copy(self._raw_image)
+            self._temp_image = np.uint8(np.copy(self._raw_image))
+            self._temp_image.shape = (24, 32)
             self._raw_image=self._temps_to_rescaled_uints(self._raw_image,self._temp_min,self._temp_max)
             self._sized_raw = cv2.resize(self._raw_image, (800,600), interpolation=cv2.INTER_CUBIC)
             self._sized_raw = self._uints_to_rescaled_temps(self._sized_raw, self._temp_max, self._temp_min)
@@ -148,7 +156,7 @@ class pithermalcam:
         cv2.resizeWindow('Thermal Image', self.image_width,self.image_height)
         cv2.imshow('Thermal Image', self._image)
 
-    def filter_thermalobj(self):
+    def filter_thermalobj(self, pwh, pht, latit, longi):
         imghsv = cv2.cvtColor(self._image, cv2.COLOR_BGR2HSV)
         lower_hot = np.array([0, 60, 60])
         upper_hot = np.array([32, 255, 255])
@@ -164,10 +172,14 @@ class pithermalcam:
                 x,y,w,h = cv2.boundingRect(cnt)
                 cv2.rectangle(im, (x,y), (x+w, y+h), (0, 255,0),2)
                 M = cv2.moments(cnt)
-                center_y = int(M['m10']/M['m00'])
-                center_x = int(M['m01']/M['m00'])
-                temp_center = self.temp_at_pt(center_x, center_y)
-                cv2.putText(im, temp_center+"C", (center_y, center_x), cv2.FONT_HERSHEY_COMPLEX, 0.5, (255, 255, 255))
+                center_x = int(M['m10']/M['m00'])
+                center_y = int(M['m01']/M['m00'])
+                temp_center = self.temp_at_pt(center_y, center_x)
+                center_dist_y = abs(center_y - 300)*pht
+                center_dist_x = abs(center_x -400)*pwh
+                new_lat = latit + (center_dist_y / r_earth)*(180/math.pi)
+                new_lon = longi + (center_dist_x / r_earth)*(180/math.pi)/math.cos(latit*math.pi/180)
+                cv2.putText(im, temp_center+"C at lat:"+str(new_lat)+" lon:"+str(new_lon), (center_x, center_y), cv2.FONT_HERSHEY_COMPLEX, 0.5, (255, 255, 255))
                 cv2.putText(im, self.temp_at_pt(y, x)+"C", (x, y), cv2.FONT_HERSHEY_COMPLEX, 0.5, (255, 255, 255))
                 cv2.putText(im, self.temp_at_pt(y, x+w)+"C", (x+w, y), cv2.FONT_HERSHEY_COMPLEX, 0.5, (255, 255, 255))
                 cv2.putText(im, self.temp_at_pt(y+h, x)+"C", (x,y+h), cv2.FONT_HERSHEY_COMPLEX, 0.5, (255, 255, 255))
@@ -182,12 +194,15 @@ class pithermalcam:
             cv2.imwrite("saved.jpg", contour_img)
             self._z+=1
 
-    def temp_at_pt(self, x, y):
-        if x == 600:
-            x = 599
-        if y == 800:
-            y = 799
-        return str(self._sized_raw[x][y])
+    def temp_at_pt(self, y, x):
+        if y == 600:
+            y = 599
+        y_sm = math.floor(y / 25)
+        if x == 800:
+            x = 799
+        x_sm = math.floor(x / 25)
+        #return str(self._sized_raw[y][x])
+        return str(self._temp_image[y_sm][x_sm])
 
     def _set_click_keyboard_events(self):
         """Add click and keyboard actions to image"""
@@ -236,7 +251,7 @@ class pithermalcam:
         print("I - Change the Interpolation Algorithm Used")
         print("Double-click with Mouse - Save a Snapshot of the Current Frame")
 
-    def display_next_frame_onscreen(self):
+    def display_next_frame_onscreen(self, pw, ph, lat, lon):
         """Display the camera live to the display"""
         # Display shortcuts reminder to user on first run
         if not self._displaying_onscreen:
@@ -244,7 +259,7 @@ class pithermalcam:
             self._displaying_onscreen = True
         self.update_image_frame()
         self._show_processed_image()
-        self.filter_thermalobj()
+        self.filter_thermalobj(pwh=pw, pht=ph, latit=lat,longi=lon)
         self._set_click_keyboard_events()
 
     def change_colormap(self, forward:bool = True):

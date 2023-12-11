@@ -7,12 +7,13 @@ from gps import *
 import time
 import paho.mqtt.client as mqtt
 import math
+from pi_therm_cam import pithermalcam
+#import rasterio as rio
+from pyproj import Proj, transform
+#import gdal, osr
 
-IMAGE_CENTER_X = 400
-IMAGE_CENTER_Y = 300 
-THERM_CENTER_X = 16
-THERM_CENTER_Y = 12
-local_elevation = 150
+
+local_elevation = 70
 pixel_width = 0
 pixel_height = 0
 altitude = 0
@@ -24,7 +25,7 @@ wind_speed = 0
 
 gpsd = gps(mode=WATCH_ENABLE|WATCH_NEWSTYLE) 
 
-hostname = '192.'
+hostname1 = "127.0.1.1"
 broker_port = 1883
 topic_wind = "fratPi/wind"
 topic_gps = "fratPi/gps"
@@ -35,19 +36,20 @@ topic_map = "fratPi/map"
 
 def on_connect(client, userdata, flags, rc):
     print("Connected to MQTT broker with result code: " + str(rc))
-    
 
-def on_message(client, userdata, msg):
-     print("Message received: " + msg.payload.decode('utf-8'))
+def on_log(client, userdata, level, buf):
+    print("log: ", buf)
 
-client = mqtt.Client('fratPi')
+client = mqtt.Client("frat1")
+
+output_folder = '/home/johnlomax/Desktop/Imagery'
+
+thermcam = pithermalcam(output_folder=output_folder)
+
+client.connect(host=hostname1)
 
 client.on_Connect = on_connect
-client.on_message = on_message
-
-client.connect(hostname, broker_port, 60)
-
-client.loop_start()
+#client.on_log=on_log
 
 try:
  
@@ -63,7 +65,7 @@ try:
 
             latitude = getattr(report,'lat',0.0)
             longitude = getattr(report,'lon',0.0)
-            altitude = getattr(report,'alt','nan')
+            altitude = getattr(report,'alt', 0.0)
             print(latitude,"\t",)
             print(longitude,"\t",)
             print(getattr(report,'time',''),"\t",)
@@ -73,28 +75,29 @@ try:
             print(getattr(report,'speed','nan'),"\t",)
             print(getattr(report,'climb','nan'),"\t")
         
-        if altitude != 0:
+        if not altitude <= 0 and altitude != 'nan':
             pixel_width = math.tan(55/2)*(altitude-local_elevation)*2/32/800
             pixel_height = math.tan(35/2)*(altitude-local_elevation)*2/24/600
+
+        thermcam.display_next_frame_onscreen(pw=pixel_width, ph=pixel_height, lat=latitude,lon=longitude)
 
         temperature, humidity = sensor.measure()
         print('Temperature:', temperature, 'ºC, RH:', humidity, '%')
         print("SHT30 status:")
         print(sensor.status())
-        msg = str(temperature)
-        info = client.publish(topic='fratPi/temp', payload=msg.encode('utf-8'), qos=0)
-        info.wait_for_publish()
-        msg = str(humidity)
-        info = client.publish(topic='fratPi/humidity', payload=msg.encode('utf-8'), qos=0)
-        info.wait_for_publish()
-        msg = "lat"+str(latitude) +",lon"+str(longitude)+",alt"+str(altitude)
-        info = client.publish(topic='fratPi/gps', payload=msg.encode('utf-8'), qos=0)
-        info.wait_for_publish()
+        msg = str(round(temperature, 2))+" ºC"
+        info = client.publish(topic="fratPi/temp", payload=msg.encode('utf-8'), qos=0)
+        
+        msg = str(round(humidity, 2))+" %"
+        info = client.publish(topic="fratPi/humidity", payload=msg.encode('utf-8'), qos=0)
+        
+        msg = "lat: "+str(latitude) +", lon: "+str(longitude)+", alt: "+str(altitude)
+        info = client.publish(topic="fratPi/gps", payload=msg.encode('utf-8'), qos=0)
+        
 
         time.sleep(1)
     
 
 
 except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
-    client.loop_stop()
     print("Done.\nExiting.")
