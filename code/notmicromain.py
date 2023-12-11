@@ -13,7 +13,7 @@ from pyproj import Proj, transform
 #import gdal, osr
 
 
-local_elevation = 70
+local_elevation = 15
 pixel_width = 0
 pixel_height = 0
 altitude = 0
@@ -54,45 +54,53 @@ client.on_Connect = on_connect
 try:
  
     while True:
-        
-        report = gpsd.next() #
+        print(1)
+        report = None#gpsd.next() #
+        print(1.5)
         sensor = driver.SHT30()
+        print(1.75)
         data = []
-
+        print(2)
         if not sensor.is_plugged():
             print("SHT30 is not plugged!")
-        if report['class'] == 'TPV':
-
-            latitude = getattr(report,'lat',0.0)
-            longitude = getattr(report,'lon',0.0)
-            altitude = getattr(report,'alt', 0.0)
-            print(latitude,"\t",)
-            print(longitude,"\t",)
-            print(getattr(report,'time',''),"\t",)
-            print(altitude,"\t\t",)
-            print(getattr(report,'epv','nan'),"\t",)
-            print(getattr(report,'ept','nan'),"\t",)
-            print(getattr(report,'speed','nan'),"\t",)
-            print(getattr(report,'climb','nan'),"\t")
+        if report:
+            if report['class'] == 'TPV':
+                print(3)
+                latitude = getattr(report,'lat',0.0)
+                longitude = getattr(report,'lon',0.0)
+                altitude = getattr(report,'alt', 0.0)
+                print(latitude,"\t",)
+                print(longitude,"\t",)
+                print(getattr(report,'time',''),"\t",)
+                print(altitude,"\t\t",)
+                print(getattr(report,'epv','nan'),"\t",)
+                print(getattr(report,'ept','nan'),"\t",)
+                print(getattr(report,'speed','nan'),"\t",)
+                print(getattr(report,'climb','nan'),"\t")
         
         if not altitude <= 0 and altitude != 'nan':
+            print(4)
             pixel_width = math.tan(55/2)*(altitude-local_elevation)*2/32/800
             pixel_height = math.tan(35/2)*(altitude-local_elevation)*2/24/600
 
         thermcam.display_next_frame_onscreen(pw=pixel_width, ph=pixel_height, lat=latitude,lon=longitude)
-
+        print(5)
         temperature, humidity = sensor.measure()
+        print(6)
         print('Temperature:', temperature, 'ºC, RH:', humidity, '%')
-        print("SHT30 status:")
+        #print("SHT30 status:")
         print(sensor.status())
         msg = str(round(temperature, 2))+" ºC"
         info = client.publish(topic="fratPi/temp", payload=msg.encode('utf-8'), qos=0)
+        print(7)
         
         msg = str(round(humidity, 2))+" %"
         info = client.publish(topic="fratPi/humidity", payload=msg.encode('utf-8'), qos=0)
+        print(8)
         
         msg = "lat: "+str(latitude) +", lon: "+str(longitude)+", alt: "+str(altitude)
         info = client.publish(topic="fratPi/gps", payload=msg.encode('utf-8'), qos=0)
+        print(9)
         
 
         time.sleep(1)

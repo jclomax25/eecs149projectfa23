@@ -168,13 +168,13 @@ class pithermalcam:
         contour_img = np.zeros((600,800, 3), np.uint8)
         contour_img[:,:] = (245, 233, 175)
         for cnt in contours:
-            if cv2.contourArea(cnt) > 3000:
+            if cv2.contourArea(cnt) > 1000:
                 x,y,w,h = cv2.boundingRect(cnt)
                 cv2.rectangle(im, (x,y), (x+w, y+h), (0, 255,0),2)
                 M = cv2.moments(cnt)
                 center_x = int(M['m10']/M['m00'])
                 center_y = int(M['m01']/M['m00'])
-                temp_center = self.temp_at_pt(center_y, center_x)
+                temp_center = self.center_max_temp_at_pt(center_y, center_x, x,y,w,h)
                 center_dist_y = abs(center_y - 300)*pht
                 center_dist_x = abs(center_x -400)*pwh
                 new_lat = latit + (center_dist_y / r_earth)*(180/math.pi)
@@ -185,6 +185,7 @@ class pithermalcam:
                 cv2.putText(im, self.temp_at_pt(y+h, x)+"C", (x,y+h), cv2.FONT_HERSHEY_COMPLEX, 0.5, (255, 255, 255))
                 cv2.putText(im, self.temp_at_pt(y+h, x+w)+"C", (x+w, y+h), cv2.FONT_HERSHEY_COMPLEX, 0.5, (255, 255, 255))
                 #cv2.drawContours(contour_img, cv2.approxPolyDP(cnt, 0.01*cv2.arcLength(cnt, True), True), -1, (0,0,255), -1)
+                cv2.putText(contour_img, temp_center+"C at lat:"+str(new_lat)+" lon:"+str(new_lon), (center_x, center_y), cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 0))
                 cv2.drawContours(contour_img, cnt, -1, (0,0,255), 10)
         cv2.namedWindow('Thermal Image bounded', cv2.WINDOW_NORMAL)
         cv2.resizeWindow('Thermal Image bounded', self.image_width,self.image_height)
@@ -202,7 +203,47 @@ class pithermalcam:
             x = 799
         x_sm = math.floor(x / 25)
         #return str(self._sized_raw[y][x])
-        return str(self._temp_image[y_sm][x_sm])
+        return str(self._temp_image[y_sm][31-x_sm])
+    
+    def center_max_temp_at_pt(self, y, x, start_x, start_y, delta_x, delta_y):
+        if y == 600:
+            y = 599
+        y_sm = math.floor(y / 25)
+        #print(start_y)
+        #print(delta_y)
+        start_y = math.floor(start_y/25)
+        delta_y = math.floor(delta_y/25)
+        #print(start_y)
+        #print(delta_y)
+        if x == 800:
+            x = 799
+        x_sm = math.floor(x / 25)
+        #print(start_x)
+        #print(delta_x)
+        start_x = math.floor(start_x/25)
+        delta_x = math.floor(delta_x/25)
+        #print(self._temp_image)
+        #print(start_x)
+        #print(delta_x)
+        #return str(self._sized_raw[y][x])
+        max = self._temp_image[y_sm][31-x_sm]
+        """for val2 in range(-1, delta_y+1):
+            for val1 in range(-1, delta_x+1):
+                if start_x+val1 < 0:
+                    val1=0
+                if start_y+val2 < 0:
+                    val2=0
+                if start_x+val1 > 23:
+                    val1-=1
+                if start_y+val2 > 23:
+                    val2-=1
+                #print(self._temp_image[start_y+val2][32-start_x-val1])
+                #print(f"row:{start_y+val2}")
+                #print(f"col:{32-start_x-val1}")
+                if self._temp_image[start_y+val2][32-start_x-val1] > max:
+                    max = self._temp_image[start_y+val2][32-start_x-val1]"""
+
+        return str(max)
 
     def _set_click_keyboard_events(self):
         """Add click and keyboard actions to image"""
@@ -334,7 +375,7 @@ class pithermalcam:
         # Loop to display frames unless/until user requests exit
         while not self._exit_requested:
             try:
-                self.display_next_frame_onscreen()
+                self.display_next_frame_onscreen(0 ,0 ,0,0)
             # Catch a common I2C Error. If you get this too often consider checking/adjusting your I2C Baudrate
             except RuntimeError as e:
                 if e.message == 'Too many retries':
