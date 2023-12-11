@@ -7,6 +7,9 @@ https://www.prairieprojectknowledgehub.org/books/fire/page/rothermels-simple-fir
 """
 
 import math
+import random
+import csv
+import statistics
 
 def get_simple_fire_spread(fuelload, fueldepth, windspeed, slope, fuelmoisture, fuelsav):
     """ model the rothermel surface fire spread on simplified parameters
@@ -94,22 +97,82 @@ def get_simple_fire_spread(fuelload, fueldepth, windspeed, slope, fuelmoisture, 
         return (maxval, maxval, maxval)
     
 
-def classify_ros_value(ros: float):
+def classify_ros_value(ros: float) -> str:
     """ classify the ros value based on NWCG values
         compare to IFTDSS values
 
-        need to convert ros value to chains/hr unit
+        expects values to be in chain/hr units
     """
-
-    return
-
+    if ros >= 0 and ros <= 2:
+        return "Very Low"
+    elif ros > 2 and ros <= 5:
+        return "Low"
+    elif ros > 5 and ros <= 20:
+        return "Moderate"
+    elif ros > 20 and ros <= 50:
+        return "High"
+    elif ros > 50 and ros <= 150:
+        return "Very High"
+    else:
+        return "Extreme"
+    
 def ft_min_to_chain_hr(ros: float) -> float:
-    """ apply unit conversions for rothermel model
+    """ ros converstion
     """
+    feet_per_chain = 66.0
+    minutes_per_hour = 60.0
+    chains_per_hour = (ros * minutes_per_hour) / feet_per_chain
+    return chains_per_hour
 
-    # (ft / min) * (min / hour ) * (chain / ft )
 
-    return 0
+def pick_fuel_type(cats: list) -> str:
+    """ if a lat lon read returns multiple fuel types
+        exclude NB type
+        then ranodomly pick
+    """
+    assert len(cats) != 0, "No fuel types detected, empty arr"
+    if len(cats) == 1:
+        return cats[0]
+
+    containing_NB = [s for s in cats if "NB" in s]
+    if len(containing_NB) == len(cats):
+        return random.choice(cats)
+    else:
+        filtered_strings = [s for s in cats if "NB" not in s]
+        return random.choice(filtered_strings)
+    
+
+def sum_fuel_load(cat: str, csv_file: str) -> float:
+    """ use strings to find the sum fuel load for type
+        return int calculation
+    """
+    with open(csv_file, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if row['TYPE'] == cat:
+                sum = float(row['FUEL_LOAD_1']) + float(row['FUEL_LOAD_10']) + float(row['FUEL_LOAD_100'])
+                return sum
+
+
+def sav_average(cat: str, csv_file: str) -> float:
+    """ average values for sav if not in 9999 category
+    """
+    with open(csv_file, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if row['TYPE'] == cat:
+                vals = []
+                if float(row['SAV_1HR']) != 9999:
+                    vals.append(float(row['SAV_1HR']))
+                if float(row['SAV_LIVE']) != 9999:
+                    vals.append(float(row['SAV_LIVE']))
+                if float(row['SAV_WOODY']) != 9999:
+                    vals.append(float(row['SAV_WOODY']))
+
+                assert len(vals) != 0, "fatal; no valid sav found to append"
+
+                return statistics.mean(vals)
+
 
 def test01_get_simple_fire_spread():
     """ test for get_simple_fire_spread

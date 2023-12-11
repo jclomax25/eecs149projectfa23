@@ -6,16 +6,18 @@ simulate the connection between reads and the model
 call on functions to produce a final value
 
 """
-
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 from read_tif_file import *
 from constants import *
+from fire_model import *
 
 
 POINT_USE = False
 
 if POINT_USE:
     # gen single point 30m x 30m bounding box
-    master_point = CORY_TEST_POINT
+    master_point = SINGLE_TESTING_POINT
     master_bounds = create_bounding_box(master_point[0], master_point[1])
 else:
     # switch on bound input for reading
@@ -67,6 +69,17 @@ slope_unq = find_unique(slope_read)
 
 print("all unique slope")
 print(slope_unq)
+
+# process vals and prep for ros input
+cur_fuel_type = pick_fuel_type(unique_classification)
+fuel_load = sum_fuel_load(cur_fuel_type, FORTY_PROPERTIES_CSV)
+fuel_sav = sav_average(cur_fuel_type, FORTY_PROPERTIES_CSV)
+
+print('fuel load')
+print(fuel_load)
+
+print('fuel sav')
+print(fuel_sav)
 
 
 print("Done - Debug close")

@@ -5,7 +5,6 @@ convert lat/lon to make request on tif area
 
 """
 
-# import tifffile
 import math
 import csv
 import rasterio as rio
