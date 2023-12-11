@@ -10,6 +10,7 @@ import math
 import random
 import csv
 import statistics
+from datetime import datetime, timedelta, timezone
 
 def get_simple_fire_spread(fuelload, fueldepth, windspeed, slope, fuelmoisture, fuelsav):
     """ model the rothermel surface fire spread on simplified parameters
@@ -173,6 +174,137 @@ def sav_average(cat: str, csv_file: str) -> float:
 
                 return statistics.mean(vals)
 
+def aspect_to_direction(aspect):
+    """ use degree to fetch aspect, use for fine dead fuel moisture
+    """
+    aspect %= 360
+
+    if aspect < 0:
+        return "NONE"
+
+    if 315 <= aspect < 45 or (aspect >= 315 and aspect <= 360):
+        return 'N'
+    elif 45 <= aspect < 135:
+        return 'E'
+    elif 135 <= aspect < 225:
+        return 'S'
+    else:
+        return 'W'
+    
+def derive_fuel_moisture(csv_path_table_A: str, 
+                         csv_path_correction: str,
+                         dry_bulb: float, 
+                         relative_humidity: float,
+                         aspect: str,
+                         slope: int
+                         ) -> float:
+    """  dead fuel moisture of extinction - fraction
+
+        The dead fuel moisture of
+        extinction is the moisture at which the dead fuel will not sustain a spreading surface
+        fire; this is a user-supplied value.
+
+        constant value of 0.4 if unable to calculate
+    
+    """
+    try:
+        init_ref_val = ref_table_a_moisture(csv_path_table_A, relative_humidity, dry_bulb)
+        correction = ref_d_correction(csv_path_correction, aspect, slope)
+
+        return init_ref_val + correction
+    except Exception as e:
+        print(f"WARNING: failed moisture calculation; subject to default reccommendation from Rothermel documentation. Error: {e}")
+        return 0.4
+
+def get_humidity_column(relative_hum):
+    """ pattern match to ref table a 
+    """
+    humidity_ranges = [
+        (0, 4), (5, 9), (10, 14), (15, 19), (20, 24), (25, 29), (30, 34), (35, 39),
+        (40, 44), (45, 49), (50, 54), (55, 59), (60, 64), (65, 69), (70, 74),
+        (75, 79), (80, 84), (85, 89), (90, 94), (95, 99), (100, 100)
+    ]
+
+    for lower, upper in humidity_ranges:
+        if lower <= relative_hum <= upper:
+            return f'{lower}_{upper}'
+
+    # for invalid value, throw
+    return 'Invalid humidity value'
+
+def ref_table_a_moisture(csv_file, relative_hum, dry_bulb) -> int:
+    """ source fuel moisture percentage using rel humidity + bulb temp 
+    """
+
+    # map to proper name
+    col_rel_humidity = get_humidity_column(relative_hum)
+
+    with open(csv_file, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            dry_vals = [int(value) for value in row['DRY_BULB'].split(',')]
+            if len(dry_vals) == 1:
+                if dry_bulb >= 109:
+                    return int(row[col_rel_humidity])
+            else:
+                num1, num2 = sorted(dry_vals)
+                if num1 <= dry_bulb <= num2:
+                    return int(row[col_rel_humidity])
+                else:
+                    continue
+            
+def convert_to_pacific(utc_time):
+    """ convert col names for quick match
+    """
+    utc_dt = datetime.strptime(utc_time, '%H%M_%H%M')
+    utc_offset = timedelta(hours=-8)  # Pacific Time is UTC-8 (standard time)
+    pacific_dt = utc_dt + utc_offset
+
+    return pacific_dt.strftime('%H%M_%H%M')
+            
+def ref_d_correction(csv_file, aspect, slope):
+    """ apply fuel moisture correction using aspect + slope + time
+    """
+    # assume worst case if none sensed
+    if aspect == 'NONE':
+        aspect = 'S'
+    else:
+        assert aspect == 'N' or aspect == 'S' or aspect == 'W' or aspect == 'E', "Unidentified aspect provided"
+
+    # PDT fetch 
+    utc_offset = timedelta(hours=-7)
+    pacific_time = datetime.utcnow() + utc_offset
+    cur_pdt_time = pacific_time.strftime('%H%M')
+
+    # fetch val
+    with open(csv_file, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if row['Aspect'] == aspect:
+                slope_constr = [int(value) for value in row['Slope'].split('_')]
+                if len(slope_constr) == 1:
+                    num1 = 0
+                    num2 = 30
+                else:
+                    num1 = 31 
+                    num2 = 100
+                if num1 <= slope <= num2:
+                    # slope is matching, proceed to match w time
+                    column_names = ['0800_0959', '1000_1159', '1200_1359', '1400_1559', '1600_1759']
+                    matching_range = None
+                    for name in column_names:
+                        start, end = name.split('_')
+                        if start <= cur_pdt_time <= end:
+                            matching_range = name
+                            break
+
+                    if not matching_range:
+                        # due to testing, this will auto fail due to local time
+                        print("WARNING: time col no matches found, failed search; selecting default 0800")
+                        matching_range = '0800_0959'
+
+                    # finally extract val
+                    return int(row[matching_range])
 
 def test01_get_simple_fire_spread():
     """ test for get_simple_fire_spread

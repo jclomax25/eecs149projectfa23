@@ -13,7 +13,10 @@ from constants import *
 from fire_model import *
 
 
+# manual controls - to be replaced with peripheral streams
 POINT_USE = False
+REV_HUMIDITY = 30 # percent form assumed
+DRY_BULB = 70 # dry bulb in Farenheit!
 
 if POINT_USE:
     # gen single point 30m x 30m bounding box
@@ -40,7 +43,7 @@ raster_read = read_tif(FORTY_FUEL_MODELS_TIF,
                        lat_stop,
                        CRS_FORTY_FUEL)
 
-print(raster_read)
+# print(raster_read)
 
 # print unique vals for F40 extraction
 forty_unq = find_unique(raster_read)
@@ -70,6 +73,23 @@ slope_unq = find_unique(slope_read)
 print("all unique slope")
 print(slope_unq)
 
+# aspect access
+aspect_read = read_tif(ASPECT_TIF,
+                       lon_start,
+                       lon_stop,
+                       lat_start,
+                       lat_stop,
+                       CRS_FORTY_FUEL)
+
+print("all unique aspect")
+print(find_unique(aspect_read))
+
+print("apply and fetch aspects")
+aspects = []
+for deg in find_unique(aspect_read):
+    aspects.append(aspect_to_direction(deg))
+# print(aspects)
+
 # process vals and prep for ros input
 cur_fuel_type = pick_fuel_type(unique_classification)
 fuel_load = sum_fuel_load(cur_fuel_type, FORTY_PROPERTIES_CSV)
@@ -81,5 +101,14 @@ print(fuel_load)
 print('fuel sav')
 print(fuel_sav)
 
+# try: apply relative humidity search - feed dry bulb + relative humditiy + paths to csv
+fuel_moist_calc = derive_fuel_moisture(REF_TABLE_A, 
+                                       REF_CORRECTION_DEC, 
+                                       DRY_BULB, 
+                                       REV_HUMIDITY, 
+                                       'S', 4)
+
+print('finalized moisture calc')
+print(fuel_moist_calc)
 
 print("Done - Debug close")

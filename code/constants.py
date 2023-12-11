@@ -5,13 +5,19 @@ define constants global for entire FRAT project
 """
 # STATIC INPUTS 
 # 40 fuel models
-# LANDFIRE_DIR = "/Users/katrinasharonin/Downloads/landfire_FW8smOZ84csjRPi1bY8w"
 FORTY_FUEL_MODELS_TIF = "/Users/katrinasharonin/Downloads/landfire_FW8smOZ84csjRPi1bY8w/LF2022_FBFM40_230_CONUS/LC22_F40_230.tif"
 FORTY_FUEL_MODELS_ATTRIBUTES_CSV = "/Users/katrinasharonin/Downloads/LF22_F40_230.csv"
 FORTY_PROPERTIES_CSV = "/Users/katrinasharonin/Downloads/40_fuel_mapping_data.csv"
 
 # slope
 SLOPE_TIF = "/Users/katrinasharonin/Downloads/LF2020_SlpD_220_CONUS/LC20_SlpD_220.tif"
+
+# aspect
+ASPECT_TIF = "/Users/katrinasharonin/Downloads/LF2020_Asp_220_CONUS/LC20_Asp_220.tif"
+
+# fine fuel moisture
+REF_TABLE_A = "/Users/katrinasharonin/Downloads/TABLE_A_REFERENCE_FUEL_MOISTURE.csv"
+REF_CORRECTION_DEC = "/Users/katrinasharonin/Downloads/TABLE_D_CORRECTIONS_NOV_DEC.csv"
 
 # DYNAMIC INPUTS 
 # bounding box defined as x - longitude, y - latitue
