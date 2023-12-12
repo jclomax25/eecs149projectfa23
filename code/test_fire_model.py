@@ -13,14 +13,15 @@ from constants import *
 from fire_model import *
 
 
-# manual controls - to be replaced with peripheral streams
-POINT_USE = False
-REV_HUMIDITY = 30 # percent form assumed
-DRY_BULB = 70 # dry bulb in Farenheit!
+# PERIPHERAL INPUTS
+POINT_USE = True
+REV_HUMIDITY = 50 # percent form assumed
+DRY_BULB = 60 # dry bulb in Farenheit!
+WIND_SPEED = 5 # MPH
 
 if POINT_USE:
     # gen single point 30m x 30m bounding box
-    master_point = SINGLE_TESTING_POINT
+    master_point = SINGLE_GRASS_POINT # SINGLE_TESTING_POINT
     master_bounds = create_bounding_box(master_point[0], master_point[1])
 else:
     # switch on bound input for reading
@@ -33,7 +34,7 @@ lat_stop = master_bounds[3]
 
 # test prototype transform 
 pixelx, pixely = image_latlon_pxpy(lat_start, lon_start, FORTY_FUEL_MODELS_TIF, CRS_FORTY_FUEL)
-print(pixelx, pixely)
+# print(pixelx, pixely)
 
 # read from tif e.g. FORTY_FUEL_MODELS_TIF
 raster_read = read_tif(FORTY_FUEL_MODELS_TIF,
@@ -73,6 +74,9 @@ slope_unq = find_unique(slope_read)
 print("all unique slope")
 print(slope_unq)
 
+# median of collection
+slope_val = statistics.median(slope_unq)
+
 # aspect access
 aspect_read = read_tif(ASPECT_TIF,
                        lon_start,
@@ -94,6 +98,7 @@ for deg in find_unique(aspect_read):
 cur_fuel_type = pick_fuel_type(unique_classification)
 fuel_load = sum_fuel_load(cur_fuel_type, FORTY_PROPERTIES_CSV)
 fuel_sav = sav_average(cur_fuel_type, FORTY_PROPERTIES_CSV)
+fuel_depth = get_fuel_depth(cur_fuel_type, FORTY_PROPERTIES_CSV)
 
 print('fuel load')
 print(fuel_load)
@@ -111,4 +116,11 @@ fuel_moist_calc = derive_fuel_moisture(REF_TABLE_A,
 print('finalized moisture calc')
 print(fuel_moist_calc)
 
-print("Done - Debug close")
+print('call ros model')
+ros_result = get_simple_fire_spread(fuel_load, fuel_depth, WIND_SPEED, slope_val, fuel_moist_calc / 100, fuel_sav)
+
+print("Done - ROS print:")
+print(ros_result)
+
+print("all roth args")
+print(fuel_load, fuel_depth, WIND_SPEED, slope_val, fuel_moist_calc, fuel_sav)

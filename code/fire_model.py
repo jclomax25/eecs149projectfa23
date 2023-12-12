@@ -17,7 +17,7 @@ def get_simple_fire_spread(fuelload, fueldepth, windspeed, slope, fuelmoisture, 
         model is based on fundamental physical processes that dictate surface fire behavior
         @param fuelload
         @param fueldepth
-        @param windspeed
+        @param windspeed mph
         @param slope
         @param fuelmoisture
         @param fuelsav (SA to volume)
@@ -142,6 +142,15 @@ def pick_fuel_type(cats: list) -> str:
         filtered_strings = [s for s in cats if "NB" not in s]
         return random.choice(filtered_strings)
     
+def get_fuel_depth(cat: str, csv_file: str) -> float:
+    """ fetch corresponding fuel depth
+    """
+    with open(csv_file, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            if row['TYPE'] == cat:
+                return float(row['FUEL_DEPTH'])
+            
 
 def sum_fuel_load(cat: str, csv_file: str) -> float:
     """ use strings to find the sum fuel load for type
