@@ -72,14 +72,15 @@ try:
                 latitude = getattr(report,'lat',0.0)
                 longitude = getattr(report,'lon',0.0)
                 altitude = getattr(report,'alt', 0.0)
-                print(latitude,"\t",)
-                print(longitude,"\t",)
-                print(getattr(report,'time','None'),"\t",)
-                print(altitude,"\t\t",)
-                print(getattr(report,'epv','nan'),"\t",)
-                print(getattr(report,'ept','nan'),"\t",)
-                print(getattr(report,'speed','nan'),"\t",)
-                print(getattr(report,'climb','nan'),"\t")
+                #print(latitude,"\t",)
+                #print(longitude,"\t",)
+                #print(getattr(report,'time','None'),"\t",)
+                #print(altitude,"\t\t",)
+                #print(getattr(report,'epv','nan'),"\t",)
+                #print(getattr(report,'ept','nan'),"\t",)
+                #print(getattr(report,'speed','nan'),"\t",)
+                #print(getattr(report,'climb','nan'),"\t")
+                print(f"Latitude: {latitude}º, Longitude: {longitude}º, Altitude: {altitude} m")
         
         if not altitude <= 0 and altitude != 'nan':
             
@@ -92,16 +93,19 @@ try:
         
         print('Temperature:', temperature, 'ºC, RH:', humidity, '%')
         #print("SHT30 status:")
-        print(sensor.status())
+        sensor.status()
         msg = str(round(temperature, 2))+" ºC"
+        print("Publishing Temperature")
         info = client.publish(topic="fratPi/temp", payload=msg.encode('utf-8'), qos=0)
         
         
         msg = str(round(humidity, 2))+" %"
+        print("Publishing Humidity")
         info = client.publish(topic="fratPi/humidity", payload=msg.encode('utf-8'), qos=0)
         
         
         msg = "lat: "+str(latitude) +", lon: "+str(longitude)+", alt: "+str(altitude)
+        print("Publishing GPS")
         info = client.publish(topic="fratPi/gps", payload=msg.encode('utf-8'), qos=0)
         
         
