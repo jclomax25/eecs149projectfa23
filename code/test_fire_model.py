@@ -16,7 +16,7 @@ from fire_model import *
 # PERIPHERAL INPUTS
 POINT_USE = True
 REV_HUMIDITY = 50 # percent form assumed
-DRY_BULB = 60 # dry bulb in Farenheit!
+DRY_BULB = 50 # dry bulb in Farenheit!
 WIND_SPEED = 5 # MPH
 
 if POINT_USE:
@@ -94,6 +94,13 @@ for deg in find_unique(aspect_read):
     aspects.append(aspect_to_direction(deg))
 # print(aspects)
 
+if len(aspects) == 1:
+    aspect_val = aspects[0]
+elif 'S' in aspects:
+    aspect_val = 'S'
+else:
+    aspect_val = random.choice(aspects)
+
 # process vals and prep for ros input
 cur_fuel_type = pick_fuel_type(unique_classification)
 fuel_load = sum_fuel_load(cur_fuel_type, FORTY_PROPERTIES_CSV)
@@ -111,7 +118,7 @@ fuel_moist_calc = derive_fuel_moisture(REF_TABLE_A,
                                        REF_CORRECTION_DEC, 
                                        DRY_BULB, 
                                        REV_HUMIDITY, 
-                                       'S', 4)
+                                       aspect_val, slope_val)
 
 print('finalized moisture calc')
 print(fuel_moist_calc)
@@ -124,3 +131,6 @@ print(ros_result)
 
 print("all roth args")
 print(fuel_load, fuel_depth, WIND_SPEED, slope_val, fuel_moist_calc, fuel_sav)
+
+print("roth clasification")
+print(classify_ros_value(ros_result[0]))

@@ -104,18 +104,13 @@ def classify_ros_value(ros: float) -> str:
 
         expects values to be in chain/hr units
     """
-    if ros >= 0 and ros <= 2:
-        return "Very Low"
-    elif ros > 2 and ros <= 5:
+    if ros >= 0 and ros <= 5:
         return "Low"
-    elif ros > 5 and ros <= 20:
-        return "Moderate"
-    elif ros > 20 and ros <= 50:
-        return "High"
-    elif ros > 50 and ros <= 150:
-        return "Very High"
+    elif ros > 5 and ros <= 50:
+        return "Moderate To High"
     else:
-        return "Extreme"
+        # ros > 50 and ros <= 150:
+        return "Very High to Extreme"
     
 def ft_min_to_chain_hr(ros: float) -> float:
     """ ros converstion
