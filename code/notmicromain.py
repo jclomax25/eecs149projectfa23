@@ -40,6 +40,10 @@ def on_connect(client, userdata, flags, rc):
 def on_log(client, userdata, level, buf):
     print("log: ", buf)
 
+def _c_to_f(temp:float):
+        """ Convert temperature from C to F """
+        return ((9.0/5.0)*temp+32.0)
+
 client = mqtt.Client("frat1")
 
 output_folder = '/home/johnlomax/Desktop/Imagery'
@@ -54,24 +58,23 @@ client.on_Connect = on_connect
 try:
  
     while True:
-        print(1)
-        report = None#gpsd.next() #
-        print(1.5)
+        
         sensor = driver.SHT30()
-        print(1.75)
+        
         data = []
-        print(2)
+        
         if not sensor.is_plugged():
             print("SHT30 is not plugged!")
-        if report:
+        if 0 == gpsd.read() and gpsd.valid:
+            report = gpsd.next()
             if report['class'] == 'TPV':
-                print(3)
+                
                 latitude = getattr(report,'lat',0.0)
                 longitude = getattr(report,'lon',0.0)
                 altitude = getattr(report,'alt', 0.0)
                 print(latitude,"\t",)
                 print(longitude,"\t",)
-                print(getattr(report,'time',''),"\t",)
+                print(getattr(report,'time','None'),"\t",)
                 print(altitude,"\t\t",)
                 print(getattr(report,'epv','nan'),"\t",)
                 print(getattr(report,'ept','nan'),"\t",)
@@ -79,28 +82,28 @@ try:
                 print(getattr(report,'climb','nan'),"\t")
         
         if not altitude <= 0 and altitude != 'nan':
-            print(4)
+            
             pixel_width = math.tan(55/2)*(altitude-local_elevation)*2/32/800
             pixel_height = math.tan(35/2)*(altitude-local_elevation)*2/24/600
 
         thermcam.display_next_frame_onscreen(pw=pixel_width, ph=pixel_height, lat=latitude,lon=longitude)
-        print(5)
+        
         temperature, humidity = sensor.measure()
-        print(6)
+        
         print('Temperature:', temperature, 'ºC, RH:', humidity, '%')
         #print("SHT30 status:")
         print(sensor.status())
         msg = str(round(temperature, 2))+" ºC"
         info = client.publish(topic="fratPi/temp", payload=msg.encode('utf-8'), qos=0)
-        print(7)
+        
         
         msg = str(round(humidity, 2))+" %"
         info = client.publish(topic="fratPi/humidity", payload=msg.encode('utf-8'), qos=0)
-        print(8)
+        
         
         msg = "lat: "+str(latitude) +", lon: "+str(longitude)+", alt: "+str(altitude)
         info = client.publish(topic="fratPi/gps", payload=msg.encode('utf-8'), qos=0)
-        print(9)
+        
         
 
         time.sleep(1)
@@ -109,3 +112,5 @@ try:
 
 except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
     print("Done.\nExiting.")
+
+gpsd.close()
