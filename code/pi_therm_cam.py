@@ -43,7 +43,6 @@ class pithermalcam:
     _file_saved_notification_start=None
     _displaying_onscreen=False
     _exit_requested=False
-    _z=0
 
     def __init__(self,use_f:bool = False, filter_image:bool = False, image_width:int=1200, 
                 image_height:int=900, output_folder:str = '/home/pi/pithermalcam/saved_snapshots/'):
@@ -191,11 +190,11 @@ class pithermalcam:
                 cv2.putText(contour_img, "lon:"+str(new_lon), (center_x, center_y+30), cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 0))
         cv2.namedWindow('Thermal Image bounded', cv2.WINDOW_NORMAL)
         cv2.resizeWindow('Thermal Image bounded', self.image_width,self.image_height)
+        cv2.imwrite("./photos/"+str(latit)+"-"+str(longi)+"-contour.jpg", contour_img)
+        cv2.imwrite("./photos/"+str(latit)+"-"+str(longi)+"-thermalbound.jpg", im)
+        cv2.imwrite("./photos/"+str(latit)+"-"+str(longi)+"-thermalraw.jpg", self._image)
         cv2.imshow('Thermal Image bounded', im)
         cv2.imshow('Contours', contour_img)
-        if self._z == 0:
-            cv2.imwrite("saved.jpg", contour_img)
-            self._z+=1
 
     def temp_at_pt(self, y, x):
         if y == 600:
