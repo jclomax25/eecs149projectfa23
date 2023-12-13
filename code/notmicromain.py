@@ -11,6 +11,9 @@ from pi_therm_cam import pithermalcam
 #import rasterio as rio
 from pyproj import Proj, transform
 #import gdal, osr
+import busio, board
+import adafruit_ads1x15.ads1015 as ADS
+from adafruit_ads1x15.analog_in import AnalogIn
 
 
 local_elevation = 15
@@ -33,6 +36,14 @@ topic_temp = "fratPi/temp"
 topic_humidity = "fratPi/humidity"
 topic_image = "fratPi/image"
 topic_map = "fratPi/map"
+
+i2c = busio.I2C(board.SCL, board.SDA)
+
+# Create the ADC object using the I2C bus
+ads = ADS.ADS1015(i2c)
+
+# Create single-ended input on channel 0
+chan = AnalogIn(ads, ADS.P0)
 
 def on_connect(client, userdata, flags, rc):
     print("Connected to MQTT broker with result code: " + str(rc))
@@ -92,8 +103,15 @@ try:
         temperature, humidity = sensor.measure()
         
         print('Temperature:', temperature, 'ºC, RH:', humidity, '%')
+        wind = chan.voltage
+        print("{:>5}\t{:>5.3f}".format(chan.value, wind))
         #print("SHT30 status:")
         sensor.status()
+
+        msg = str(round(wind, 2))+" mph"
+        print("Publishing Wind")
+        info = client.publish(topic="fratPi/wind", payload=msg.encode('utf-8'), qos=0)
+
         msg = str(round(temperature, 2))+" ºC"
         print("Publishing Temperature")
         info = client.publish(topic="fratPi/temp", payload=msg.encode('utf-8'), qos=0)
