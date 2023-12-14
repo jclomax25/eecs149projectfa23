@@ -65,6 +65,7 @@ client.connect(host=hostname1)
 
 client.on_Connect = on_connect
 #client.on_log=on_log
+f = open("data.txt", "w")
 
 try:
  
@@ -107,32 +108,35 @@ try:
         print("{:>5}\t{:>5.3f}".format(chan.value, wind))
         #print("SHT30 status:")
         sensor.status()
+        wind_conv = 14.28*(wind - 0.45)
 
-        msg = str(round(wind, 2))+" mph"
+        msg1 = str(round(wind, 2))+" mph"
         print("Publishing Wind")
-        info = client.publish(topic="fratPi/wind", payload=msg.encode('utf-8'), qos=0)
+        info = client.publish(topic="fratPi/wind", payload=msg1.encode('utf-8'), qos=0)
 
-        msg = str(round(temperature, 2))+" ºC"
+        msg2 = str(round(temperature, 2))+" ºC"
         print("Publishing Temperature")
-        info = client.publish(topic="fratPi/temp", payload=msg.encode('utf-8'), qos=0)
+        info = client.publish(topic="fratPi/temp", payload=msg2.encode('utf-8'), qos=0)
         
         
-        msg = str(round(humidity, 2))+" %"
+        msg3 = str(round(humidity, 2))+" %"
         print("Publishing Humidity")
-        info = client.publish(topic="fratPi/humidity", payload=msg.encode('utf-8'), qos=0)
+        info = client.publish(topic="fratPi/humidity", payload=msg3.encode('utf-8'), qos=0)
         
         
-        msg = "lat: "+str(latitude) +", lon: "+str(longitude)+", alt: "+str(altitude)
+        msg4 = "lat: "+str(latitude) +", lon: "+str(longitude)+", alt: "+str(altitude)
         print("Publishing GPS")
-        info = client.publish(topic="fratPi/gps", payload=msg.encode('utf-8'), qos=0)
-        
-        
+        info = client.publish(topic="fratPi/gps", payload=msg4.encode('utf-8'), qos=0)
 
-        time.sleep(1)
+        f.write(msg1+"\n" + msg2+"\n"+msg3+"\n"+msg4+"\n")
+
+        time.sleep(10)
     
 
 
 except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
     print("Done.\nExiting.")
+
+f.close()
 
 gpsd.close()
