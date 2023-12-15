@@ -110,22 +110,22 @@ try:
         sensor.status()
         wind_conv = 14.28*(wind - 0.45)
 
-        msg1 = str(round(wind, 2))+" mph"
+        msg1 = str(round(wind_conv, 2))+" mph"
         print("Publishing Wind")
         info = client.publish(topic="fratPi/wind", payload=msg1.encode('utf-8'), qos=0)
 
         msg2 = str(round(temperature, 2))+" ºC"
         print("Publishing Temperature")
-        info = client.publish(topic="fratPi/temp", payload=msg2.encsode('utf-8'), qos=0)
+        info = client.publish(topic="fratPi/temp", payload=msg2.encode('utf-8'), qos=0)
         
-        #humidity = 34.05
+        humidity = 34.05
         msg3 = str(round(humidity, 2))+" %"
         print("Publishing Humidity")
         info = client.publish(topic="fratPi/humidity", payload=msg3.encode('utf-8'), qos=0)
         
         
-        #latitude=37.8731096667
-        #longitude=-122.259815
+        latitude=37.8731096667
+        longitude=-122.259815
 
         msg4 = "lat: "+str(latitude) +" , lon: "+str(longitude)+" , alt: "+str(altitude)
         print("Publishing GPS")
