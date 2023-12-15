@@ -104,6 +104,11 @@ def classify_ros_value(ros: float) -> str:
 
         expects values to be in chain/hr units
     """
+    ros = ft_min_to_chain_hr(ros) / 70
+
+    print("\n")
+    print("-------------------------")
+    print(f"FINAL ROS converted value to proper units: chain/hr: {ros}")
     if ros >= 0 and ros <= 5:
         return "Low"
     elif ros > 5 and ros <= 50:

@@ -14,10 +14,10 @@ from fire_model import *
 
 
 # PERIPHERAL INPUTS
-POINT_USE = True
-REV_HUMIDITY = 50 # percent form assumed
-DRY_BULB = 50 # dry bulb in Farenheit!
-WIND_SPEED = 5 # MPH
+POINT_USE = False
+REV_HUMIDITY = 80 # percent form assumed
+DRY_BULB = 40.6592 # dry bulb in Farenheit!
+WIND_SPEED = 4 # MPH
 
 if POINT_USE:
     # gen single point 30m x 30m bounding box
@@ -25,7 +25,7 @@ if POINT_USE:
     master_bounds = create_bounding_box(master_point[0], master_point[1])
 else:
     # switch on bound input for reading
-    master_bounds = TESTING_BOUNDS # BERKELEY_BOUNDS
+    master_bounds = GLADE_BOUNDS # BERKELEY_BOUNDS
 
 lon_start = master_bounds[0]
 lat_start = master_bounds[1]
