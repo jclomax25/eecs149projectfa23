@@ -13,6 +13,10 @@ import cmapy
 from scipy import ndimage
 import math
 
+__version__ = '1.0.0'
+__author__ = 'Tom Shaffner with edits and added functions by John Lomax'
+__license__ = "GNU Affero General Public License (AGPL). https://www.gnu.org/licenses/agpl-3.0.html"
+
 # Set up logging
 logging.basicConfig(filename='pithermcam.log',filemode='a',
                     format='%(asctime)s %(levelname)-8s [%(filename)s:%(name)s:%(lineno)d] %(message)s',
@@ -89,8 +93,9 @@ class pithermalcam:
         temp_f=self._c_to_f(temp_c)
         return temp_c, temp_f
 
-    def _pull_raw_image(self):
+    def _pull_raw_image(self): 
         """Get one pull of the raw image data, converting temp units if necessary"""
+        """Modified by John Lomax"""
         # Get image
         self._raw_image = np.zeros((24*32,))
         try:
@@ -157,6 +162,7 @@ class pithermalcam:
         cv2.imshow('Thermal Image', self._image)
 
     def filter_thermalobj(self, pwh, pht, latit, longi):
+        """Created by John Lomax"""
         imghsv = cv2.cvtColor(self._image, cv2.COLOR_BGR2HSV)
         lower_hot = np.array([0, 60, 60])
         upper_hot = np.array([32, 255, 255])
@@ -199,6 +205,7 @@ class pithermalcam:
         cv2.imshow('Contours', contour_img)
 
     def temp_at_pt(self, y, x):
+        """Created by John Lomax"""
         if y == 600:
             y = 599
         y_sm = math.floor(y / 25)
@@ -209,6 +216,7 @@ class pithermalcam:
         return str(self._temp_image[y_sm][31-x_sm])
     
     def center_max_temp_at_pt(self, y, x, start_x, start_y, delta_x, delta_y):
+        """Created by John Lomax"""
         if y == 600:
             y = 599
         y_sm = math.floor(y / 25)
@@ -297,6 +305,7 @@ class pithermalcam:
 
     def display_next_frame_onscreen(self, pw, ph, lat, lon):
         """Display the camera live to the display"""
+        """Modified by John Lomax"""
         # Display shortcuts reminder to user on first run
         if not self._displaying_onscreen:
             self._print_shortcuts_keys()
@@ -370,11 +379,13 @@ class pithermalcam:
     
     def _uints_to_rescaled_temps(self, val, Tmax, Tmin):
         """Function to convert temperatures to pixels on image"""
+        """Created by John Lomax"""
         norm = np.uint8(val*((Tmax-Tmin)/255) + Tmin)
         norm.shape = (600,800)
         return norm
 
     def display_camera_onscreen(self):
+        """Modified by John Lomax"""
         # Loop to display frames unless/until user requests exit
         while not self._exit_requested:
             try:

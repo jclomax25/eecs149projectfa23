@@ -114,18 +114,16 @@ try:
         print("Publishing Wind")
         info = client.publish(topic="fratPi/wind", payload=msg1.encode('utf-8'), qos=0)
 
-        msg2 = str(round(temperature, 2))+" ºC"
+        temperature = _c_to_f(temperature)
+
+        msg2 = str(round(temperature, 2))+" ºF"
         print("Publishing Temperature")
         info = client.publish(topic="fratPi/temp", payload=msg2.encode('utf-8'), qos=0)
         
-        humidity = 34.05
-        msg3 = str(round(humidity, 2))+" %"
+        msg3 = str(round(humidity, 0))+" %"
         print("Publishing Humidity")
         info = client.publish(topic="fratPi/humidity", payload=msg3.encode('utf-8'), qos=0)
         
-        
-        latitude=37.8731096667
-        longitude=-122.259815
 
         msg4 = "lat: "+str(latitude) +" , lon: "+str(longitude)+" , alt: "+str(altitude)
         print("Publishing GPS")

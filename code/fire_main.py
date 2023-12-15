@@ -34,16 +34,14 @@ def on_message(client, userdata, msg):
      if data.__contains__('mph'):
          global speed 
          speed = float(data.split(" ")[0])
-         print(speed)
          return
      if data.__contains__('%'):
          global hum
          hum = float(data.split(" ")[0])
          return
-     if data.__contains__('ºC'):
+     if data.__contains__('ºF'):
          global temp
          temp = float(data.split(" ")[0])
-         print(temp)
          return
      if data.__contains__('lat:'):
          global lat_lon
