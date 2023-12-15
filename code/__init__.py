@@ -4,6 +4,9 @@
 from pithermalcam.pi_therm_cam import pithermalcam
 from pithermalcam import web_server
 
+__version__ = '1.0.0'
+__author__ = 'Tom Shaffner with edits and added functions by John Lomax'
+__license__ = "GNU Affero General Public License (AGPL). https://www.gnu.org/licenses/agpl-3.0.html"
 
 def test_camera():
     """Check for an average temperature value to ensure the camera is connected and working."""
