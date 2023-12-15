@@ -1,0 +1,271 @@
+{
+  "type" : "CIMLayerDocument",
+  "version" : "2.9.0",
+  "build" : 32739,
+  "layers" : [
+    "CIMPATH=map/121673_all_tif_aspect.xml"
+  ],
+  "layerDefinitions" : [
+    {
+      "type" : "CIMRasterLayer",
+      "name" : "Aspect",
+      "uRI" : "CIMPATH=map/121673_all_tif_aspect.xml",
+      "sourceModifiedTime" : {
+        "type" : "TimeInstant"
+      },
+      "useSourceMetadata" : true,
+      "description" : "121673_all.tif_Aspect",
+      "layerElevation" : {
+        "type" : "CIMLayerElevationSurface",
+        "mapElevationID" : "{01C571F4-0954-4AD5-8D62-E21AE84C7767}"
+      },
+      "layerType" : "Operational",
+      "showLegends" : true,
+      "visibility" : true,
+      "displayCacheType" : "Permanent",
+      "maxDisplayCacheAge" : 5,
+      "showPopups" : true,
+      "serviceLayerID" : -1,
+      "refreshRate" : -1,
+      "refreshRateUnit" : "esriTimeUnitsSeconds",
+      "blendingMode" : "Alpha",
+      "allowDrapingOnIntegratedMesh" : true,
+      "dataConnection" : {
+        "type" : "CIMRasterBandDataConnection",
+        "workspaceConnectionString" : "DATABASE=E:\\iftdss\\work\\Landscape\\2023\\3\\tifs",
+        "workspaceFactory" : "Raster",
+        "dataset" : "121673_all.tif",
+        "datasetType" : "esriDTAny",
+        "rasterBandName" : "Aspect"
+      },
+      "colorizer" : {
+        "type" : "CIMRasterClassifyColorizer",
+        "resamplingType" : "NearestNeighbor",
+        "noDataColor" : {
+          "type" : "CIMRGBColor",
+          "values" : [
+            240,
+            240,
+            240,
+            0
+          ]
+        },
+        "normalizationField" : "<None>",
+        "normalizationType" : "Nothing",
+        "classBreaks" : [
+          {
+            "type" : "CIMRasterClassBreak",
+            "label" : "Flat",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                156,
+                156,
+                156,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 22,
+            "label" : "0 - 22 (N)",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                226,
+                209,
+                96,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 67,
+            "label" : "23 - 67 (NE)",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                189,
+                159,
+                68,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 112,
+            "label" : "68 - 112 (E)",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                154,
+                112,
+                31,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 157,
+            "label" : "113 - 157 (SE)",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                129,
+                61,
+                0,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 202,
+            "label" : "158 - 202 (S)",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                161,
+                106,
+                35,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 247,
+            "label" : "203 - 247 (SW)",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                191,
+                159,
+                65,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 292,
+            "label" : "248 - 292 (W)",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                223,
+                207,
+                95,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 337,
+            "label" : "293 - 337 (NW)",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                255,
+                254,
+                131,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 359,
+            "label" : "338 - 359 (N)",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                226,
+                209,
+                96,
+                100
+              ]
+            }
+          }
+        ],
+        "classificationMethod" : "Manual",
+        "colorRamp" : {
+          "type" : "CIMPolarContinuousColorRamp",
+          "colorSpace" : {
+            "type" : "CIMICCColorSpace",
+            "url" : "Default RGB"
+          },
+          "fromColor" : {
+            "type" : "CIMHSVColor",
+            "values" : [
+              -1,
+              0,
+              0,
+              100
+            ]
+          },
+          "toColor" : {
+            "type" : "CIMHSVColor",
+            "values" : [
+              -1,
+              0,
+              100,
+              100
+            ]
+          },
+          "interpolationSpace" : "HSV",
+          "polarDirection" : "Auto"
+        },
+        "exclusionColor" : {
+          "type" : "CIMRGBColor",
+          "values" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "field" : "<VALUE>",
+        "hillshadeZFactor" : 1,
+        "minimumBreak" : -1,
+        "showInAscendingOrder" : true,
+        "numberFormat" : {
+          "type" : "CIMNumericFormat",
+          "alignmentOption" : "esriAlignLeft",
+          "alignmentWidth" : 12,
+          "roundingOption" : "esriRoundNumberOfSignificantDigits",
+          "roundingValue" : 10,
+          "useSeparator" : true
+        }
+      }
+    }
+  ],
+  "elevationSurfaces" : [
+    {
+      "type" : "CIMMapElevationSurface",
+      "elevationMode" : "BaseGlobeSurface",
+      "name" : "Ground",
+      "verticalExaggeration" : 1,
+      "mapElevationID" : "{01C571F4-0954-4AD5-8D62-E21AE84C7767}",
+      "color" : {
+        "type" : "CIMRGBColor",
+        "values" : [
+          255,
+          255,
+          255,
+          100
+        ]
+      },
+      "surfaceTINShadingMode" : "Smooth",
+      "visibility" : true,
+      "expanded" : true
+    }
+  ],
+  "rGBColorProfile" : "sRGB IEC61966-2.1",
+  "cMYKColorProfile" : "U.S. Web Coated (SWOP) v2"
+}

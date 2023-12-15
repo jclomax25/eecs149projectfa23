@@ -1,0 +1,146 @@
+<PAMDataset>
+  <Metadata>
+    <MDI key="Band_1">Elevation</MDI>
+    <MDI key="Band_10">EVC</MDI>
+    <MDI key="Band_11">EVH</MDI>
+    <MDI key="Band_12">Zone</MDI>
+    <MDI key="Band_2">Slope</MDI>
+    <MDI key="Band_3">Aspect</MDI>
+    <MDI key="Band_4">Fuel Model</MDI>
+    <MDI key="Band_5">Canopy Cover</MDI>
+    <MDI key="Band_6">Stand Height</MDI>
+    <MDI key="Band_7">Canopy Base Height</MDI>
+    <MDI key="Band_8">Canopy Bulk Density</MDI>
+    <MDI key="Band_9">EVT</MDI>
+    <MDI key="DataType">Generic</MDI>
+  </Metadata>
+  <Metadata domain="Esri">
+    <MDI key="PyramidResamplingType">NEAREST</MDI>
+  </Metadata>
+  <PAMRasterBand band="1">
+    <Description>Elevation</Description>
+    <Histograms>
+      <HistItem>
+        <HistMin>-1.499113475177305</HistMin>
+        <HistMax>562.4991134751773</HistMax>
+        <BucketCount>564</BucketCount>
+        <IncludeOutOfRange>0</IncludeOutOfRange>
+        <Approximate>1</Approximate>
+        <HistCounts>258|50861|2023|5053|470|322|277|253|320|245|241|284|287|216|216|269|300|212|188|249|295|334|279|262|235|260|288|282|292|233|265|300|245|249|292|279|238|239|259|244|247|223|228|219|229|251|193|186|171|176|187|206|202|200|190|199|173|212|268|257|271|264|251|249|230|231|219|234|267|253|208|193|241|236|259|319|315|269|286|251|227|206|197|226|213|166|207|188|194|201|183|168|170|135|140|160|1576|421|308|283|333|346|329|293|283|260|186|211|202|182|198|194|172|161|168|217|185|187|165|175|192|160|177|172|187|183|191|190|173|173|211|196|241|223|214|219|192|205|201|209|212|606|431|269|309|363|339|375|456|556|545|502|498|581|612|556|566|562|562|632|643|593|563|619|564|616|596|641|587|601|595|1006|688|638|603|642|643|648|636|695|681|617|649|696|726|704|626|644|622|636|675|610|668|664|690|670|697|682|715|663|666|700|636|672|702|693|691|711|667|678|673|684|669|661|735|707|670|665|689|679|736|705|704|790|720|697|756|723|730|735|659|671|659|658|711|658|679|638|664|671|659|726|656|627|667|611|661|664|669|658|673|693|640|651|653|670|650|669|637|651|616|595|663|666|618|652|613|653|617|558|535|594|607|557|547|599|574|533|563|523|587|548|550|529|581|535|569|548|506|546|549|513|494|485|469|509|492|504|494|460|504|446|494|454|433|434|486|448|448|413|400|399|411|359|381|379|398|387|420|348|357|353|347|370|328|353|330|323|304|335|309|295|315|298|300|272|280|272|260|248|254|262|241|257|239|216|241|251|237|221|222|214|236|239|207|228|184|191|190|202|187|188|182|187|186|204|205|190|184|155|185|163|164|161|163|184|158|184|174|173|160|164|151|145|166|174|186|163|153|165|156|190|162|137|141|170|163|138|139|140|166|171|153|168|138|151|110|127|108|130|117|128|123|120|107|129|109|131|94|121|128|110|124|120|102|109|101|123|109|107|128|112|105|92|97|90|114|79|114|94|110|92|118|107|74|87|75|84|64|93|82|75|83|90|62|81|77|73|49|63|63|52|63|72|56|45|44|43|51|48|56|63|51|52|47|44|62|49|43|57|59|43|56|43|50|51|41|61|47|52|51|49|43|34|43|40|33|34|43|32|38|47|37|31|36|28|45|44|23|38|22|29|36|28|33|35|24|32|22|19|26|32|27|23|21|27|25|25|22|24|19|25|21|22|21|16|29|18|19|17|16|9|16|18|15|13|8|13|6|13|7|1|7|3|3|2|2|1|6|1|4|2|1|2</HistCounts>
+      </HistItem>
+    </Histograms>
+    <Metadata>
+      <MDI key="RepresentationType">ATHEMATIC</MDI>
+      <MDI key="STATISTICS_APPROXIMATE">YES</MDI>
+      <MDI key="STATISTICS_MAXIMUM">562</MDI>
+      <MDI key="STATISTICS_MEAN">163.82870583853</MDI>
+      <MDI key="STATISTICS_MINIMUM">-1</MDI>
+      <MDI key="STATISTICS_STDDEV">133.12367220007</MDI>
+      <MDI key="STATISTICS_VALID_PERCENT">100</MDI>
+    </Metadata>
+  </PAMRasterBand>
+  <PAMRasterBand band="2">
+    <Description>Slope</Description>
+    <Histograms>
+      <HistItem>
+        <HistMin>-0.4886363636363636</HistMin>
+        <HistMax>43.48863636363637</HistMax>
+        <BucketCount>44</BucketCount>
+        <IncludeOutOfRange>0</IncludeOutOfRange>
+        <Approximate>1</Approximate>
+        <HistCounts>57736|8259|6960|5695|5391|5379|5314|5608|6015|6418|6745|6994|7203|7275|7472|7631|7575|7663|7225|6797|6297|5801|5150|4562|3866|3227|2654|2147|1750|1404|1052|720|523|400|274|146|94|47|30|13|13|4|5|2</HistCounts>
+      </HistItem>
+    </Histograms>
+    <Metadata>
+      <MDI key="RepresentationType">ATHEMATIC</MDI>
+      <MDI key="STATISTICS_APPROXIMATE">YES</MDI>
+      <MDI key="STATISTICS_MAXIMUM">43</MDI>
+      <MDI key="STATISTICS_MEAN">10.118136350738</MDI>
+      <MDI key="STATISTICS_MINIMUM">0</MDI>
+      <MDI key="STATISTICS_STDDEV">8.9436057263462</MDI>
+      <MDI key="STATISTICS_VALID_PERCENT">100</MDI>
+    </Metadata>
+  </PAMRasterBand>
+  <PAMRasterBand band="3">
+    <Description>Aspect</Description>
+    <Histograms>
+      <HistItem>
+        <HistMin>-1.498614958448754</HistMin>
+        <HistMax>359.4986149584487</HistMax>
+        <BucketCount>361</BucketCount>
+        <IncludeOutOfRange>0</IncludeOutOfRange>
+        <Approximate>1</Approximate>
+        <HistCounts>72955|418|434|391|393|438|472|437|420|456|412|439|495|521|445|471|491|497|515|490|549|563|555|559|536|605|606|597|622|595|554|610|587|623|613|585|625|633|602|592|609|584|572|603|641|574|615|566|566|610|574|597|600|594|621|597|575|645|575|607|522|599|591|601|582|554|565|577|557|594|549|558|574|556|553|524|551|580|553|517|468|517|540|519|497|474|503|475|480|435|421|429|449|443|395|374|400|382|371|398|408|376|353|374|356|319|371|339|294|345|372|324|345|322|312|315|289|333|290|322|323|317|326|302|309|296|317|301|328|316|288|329|322|314|298|314|322|304|317|309|290|306|286|305|313|290|284|280|313|309|333|305|307|307|297|306|324|319|320|341|286|301|313|336|348|317|320|301|356|363|364|330|290|334|362|330|344|324|359|359|366|371|360|336|364|467|391|405|425|379|399|381|421|453|473|441|415|441|484|426|468|427|468|435|424|444|461|418|450|527|484|510|448|530|500|432|467|486|502|527|490|492|509|520|493|523|563|511|507|505|499|492|488|527|543|538|504|503|507|488|510|505|522|494|515|517|499|525|500|493|456|497|479|470|492|460|453|434|456|406|464|434|406|452|414|422|408|376|397|414|410|413|377|396|351|364|395|374|400|360|369|332|361|349|331|370|361|341|360|359|397|373|355|348|349|377|338|313|312|353|353|337|361|321|335|356|351|314|330|329|354|331|330|297|338|304|315|331|314|344|311|352|333|324|332|319|370|362|389|336|339|350|333|343|332|372|333|371|352|360|368|335|383|420|347|359|396|383|358|426|400|377|385|399|364|417|395|415|374|384|391</HistCounts>
+      </HistItem>
+    </Histograms>
+    <Metadata>
+      <MDI key="RepresentationType">ATHEMATIC</MDI>
+      <MDI key="STATISTICS_APPROXIMATE">YES</MDI>
+      <MDI key="STATISTICS_MAXIMUM">359</MDI>
+      <MDI key="STATISTICS_MEAN">113.60666589813</MDI>
+      <MDI key="STATISTICS_MINIMUM">-1</MDI>
+      <MDI key="STATISTICS_STDDEV">117.60927381063</MDI>
+      <MDI key="STATISTICS_VALID_PERCENT">100</MDI>
+    </Metadata>
+  </PAMRasterBand>
+  <PAMRasterBand band="4">
+    <Description>Fuel Model</Description>
+    <Metadata>
+      <MDI key="RepresentationType">ATHEMATIC</MDI>
+      <MDI key="STATISTICS_APPROXIMATE">YES</MDI>
+      <MDI key="STATISTICS_MAXIMUM">202</MDI>
+      <MDI key="STATISTICS_MEAN">122.50505905931</MDI>
+      <MDI key="STATISTICS_MINIMUM">91</MDI>
+      <MDI key="STATISTICS_STDDEV">35.629446313552</MDI>
+      <MDI key="STATISTICS_VALID_PERCENT">100</MDI>
+    </Metadata>
+  </PAMRasterBand>
+  <PAMRasterBand band="5">
+    <Description>Canopy Cover</Description>
+    <Metadata>
+      <MDI key="RepresentationType">ATHEMATIC</MDI>
+    </Metadata>
+  </PAMRasterBand>
+  <PAMRasterBand band="6">
+    <Description>Stand Height</Description>
+    <Metadata>
+      <MDI key="RepresentationType">ATHEMATIC</MDI>
+    </Metadata>
+  </PAMRasterBand>
+  <PAMRasterBand band="7">
+    <Description>Canopy Base Height</Description>
+    <Metadata>
+      <MDI key="RepresentationType">ATHEMATIC</MDI>
+    </Metadata>
+  </PAMRasterBand>
+  <PAMRasterBand band="8">
+    <Description>Canopy Bulk Density</Description>
+    <Metadata>
+      <MDI key="RepresentationType">ATHEMATIC</MDI>
+    </Metadata>
+  </PAMRasterBand>
+  <PAMRasterBand band="9">
+    <Description>EVT</Description>
+    <Metadata>
+      <MDI key="RepresentationType">ATHEMATIC</MDI>
+    </Metadata>
+  </PAMRasterBand>
+  <PAMRasterBand band="10">
+    <Description>EVC</Description>
+    <Metadata>
+      <MDI key="RepresentationType">ATHEMATIC</MDI>
+    </Metadata>
+  </PAMRasterBand>
+  <PAMRasterBand band="11">
+    <Description>EVH</Description>
+    <Metadata>
+      <MDI key="RepresentationType">ATHEMATIC</MDI>
+    </Metadata>
+  </PAMRasterBand>
+  <PAMRasterBand band="12">
+    <Description>Zone</Description>
+    <Metadata>
+      <MDI key="RepresentationType">ATHEMATIC</MDI>
+    </Metadata>
+  </PAMRasterBand>
+</PAMDataset>

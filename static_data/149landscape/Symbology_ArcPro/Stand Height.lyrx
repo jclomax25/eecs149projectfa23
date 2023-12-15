@@ -1,0 +1,215 @@
+{
+  "type" : "CIMLayerDocument",
+  "version" : "2.9.0",
+  "build" : 32739,
+  "layers" : [
+    "CIMPATH=map/121673_all_tif_stand_height.xml"
+  ],
+  "layerDefinitions" : [
+    {
+      "type" : "CIMRasterLayer",
+      "name" : "Stand Height",
+      "uRI" : "CIMPATH=map/121673_all_tif_stand_height.xml",
+      "sourceModifiedTime" : {
+        "type" : "TimeInstant"
+      },
+      "useSourceMetadata" : true,
+      "description" : "121673_all.tif_Stand Height",
+      "layerElevation" : {
+        "type" : "CIMLayerElevationSurface",
+        "mapElevationID" : "{01C571F4-0954-4AD5-8D62-E21AE84C7767}"
+      },
+      "layerType" : "Operational",
+      "showLegends" : true,
+      "visibility" : true,
+      "displayCacheType" : "Permanent",
+      "maxDisplayCacheAge" : 5,
+      "showPopups" : true,
+      "serviceLayerID" : -1,
+      "refreshRate" : -1,
+      "refreshRateUnit" : "esriTimeUnitsSeconds",
+      "blendingMode" : "Alpha",
+      "allowDrapingOnIntegratedMesh" : true,
+      "dataConnection" : {
+        "type" : "CIMRasterBandDataConnection",
+        "workspaceConnectionString" : "DATABASE=E:\\iftdss\\work\\Landscape\\2023\\3\\tifs",
+        "workspaceFactory" : "Raster",
+        "dataset" : "121673_all.tif",
+        "datasetType" : "esriDTAny",
+        "rasterBandName" : "Stand Height"
+      },
+      "colorizer" : {
+        "type" : "CIMRasterClassifyColorizer",
+        "resamplingType" : "NearestNeighbor",
+        "noDataColor" : {
+          "type" : "CIMRGBColor",
+          "values" : [
+            255,
+            255,
+            255,
+            100
+          ]
+        },
+        "normalizationField" : "<None>",
+        "normalizationType" : "Nothing",
+        "classBreaks" : [
+          {
+            "type" : "CIMRasterClassBreak",
+            "label" : "0",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                255,
+                255,
+                128,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 50,
+            "label" : "> 0 - 5",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                255,
+                192,
+                96,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 125,
+            "label" : ">5 - 12.5",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                255,
+                128,
+                64,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 275,
+            "label" : ">12.5 - 27.5",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                192,
+                96,
+                32,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 500,
+            "label" : ">27.5 - 50",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                64,
+                0,
+                0,
+                100
+              ]
+            }
+          },
+          {
+            "type" : "CIMRasterClassBreak",
+            "upperBound" : 2000,
+            "label" : ">50",
+            "color" : {
+              "type" : "CIMRGBColor",
+              "values" : [
+                0,
+                0,
+                0,
+                100
+              ]
+            }
+          }
+        ],
+        "classificationMethod" : "Manual",
+        "colorRamp" : {
+          "type" : "CIMPolarContinuousColorRamp",
+          "colorSpace" : {
+            "type" : "CIMICCColorSpace",
+            "url" : "Default RGB"
+          },
+          "fromColor" : {
+            "type" : "CIMHSVColor",
+            "values" : [
+              -1,
+              0,
+              0,
+              100
+            ]
+          },
+          "toColor" : {
+            "type" : "CIMHSVColor",
+            "values" : [
+              -1,
+              0,
+              100,
+              100
+            ]
+          },
+          "interpolationSpace" : "HSV",
+          "polarDirection" : "Auto"
+        },
+        "exclusionColor" : {
+          "type" : "CIMRGBColor",
+          "values" : [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        "field" : "<VALUE>",
+        "hillshadeZFactor" : 1,
+        "showInAscendingOrder" : true,
+        "numberFormat" : {
+          "type" : "CIMNumericFormat",
+          "alignmentOption" : "esriAlignLeft",
+          "alignmentWidth" : 12,
+          "roundingOption" : "esriRoundNumberOfSignificantDigits",
+          "roundingValue" : 10,
+          "useSeparator" : true
+        },
+        "heading" : "Meters"
+      }
+    }
+  ],
+  "elevationSurfaces" : [
+    {
+      "type" : "CIMMapElevationSurface",
+      "elevationMode" : "BaseGlobeSurface",
+      "name" : "Ground",
+      "verticalExaggeration" : 1,
+      "mapElevationID" : "{01C571F4-0954-4AD5-8D62-E21AE84C7767}",
+      "color" : {
+        "type" : "CIMRGBColor",
+        "values" : [
+          255,
+          255,
+          255,
+          100
+        ]
+      },
+      "surfaceTINShadingMode" : "Smooth",
+      "visibility" : true,
+      "expanded" : true
+    }
+  ],
+  "rGBColorProfile" : "sRGB IEC61966-2.1",
+  "cMYKColorProfile" : "U.S. Web Coated (SWOP) v2"
+}
