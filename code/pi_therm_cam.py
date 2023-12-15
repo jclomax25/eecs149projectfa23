@@ -194,7 +194,7 @@ class pithermalcam:
         cv2.imwrite("./photos/"+str(self._n)+str(latit)+"-"+str(longi)+"-contour.jpg", contour_img)
         cv2.imwrite("./photos/"+str(self._n)+str(latit)+"-"+str(longi)+"-thermalbound.jpg", im)
         cv2.imwrite("./photos/"+str(self._n)+str(latit)+"-"+str(longi)+"-thermalraw.jpg", self._image)
-        self._n = self._n + 1
+        #self._n = self._n + 1
         cv2.imshow('Thermal Image bounded', im)
         cv2.imshow('Contours', contour_img)
 

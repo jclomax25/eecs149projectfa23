@@ -116,15 +116,18 @@ try:
 
         msg2 = str(round(temperature, 2))+" ºC"
         print("Publishing Temperature")
-        info = client.publish(topic="fratPi/temp", payload=msg2.encode('utf-8'), qos=0)
+        info = client.publish(topic="fratPi/temp", payload=msg2.encsode('utf-8'), qos=0)
         
-        
+        #humidity = 34.05
         msg3 = str(round(humidity, 2))+" %"
         print("Publishing Humidity")
         info = client.publish(topic="fratPi/humidity", payload=msg3.encode('utf-8'), qos=0)
         
         
-        msg4 = "lat: "+str(latitude) +", lon: "+str(longitude)+", alt: "+str(altitude)
+        #latitude=37.8731096667
+        #longitude=-122.259815
+
+        msg4 = "lat: "+str(latitude) +" , lon: "+str(longitude)+" , alt: "+str(altitude)
         print("Publishing GPS")
         info = client.publish(topic="fratPi/gps", payload=msg4.encode('utf-8'), qos=0)
 
